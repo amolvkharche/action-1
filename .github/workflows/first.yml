@@ -4,7 +4,7 @@ on: push
 
 jobs:
     first_job:
-        runs-on: [jumpsrv-ubuntu, test]
+        runs-on: jumpsrv-ubuntu
         steps:
         - name: Checkout Repository
           uses: actions/checkout@v4
