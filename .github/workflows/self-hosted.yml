@@ -1,12 +1,26 @@
-name: Testing self hosted runner
-on: 
-  workflow_dispatch:
+name: Install SUSE Observability Agent
+
+on:
+  push:
 
 jobs:
-  testing:
-    runs-on: [self-hosted,Linux,X64,prod,main]
+  deploy-suse-observability-agent:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Echo content
-        run: |
-          echo "welcome"
-          sleep 30s
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Kubeconfig
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Install SUSE Observability Agent
+        uses: amolkharche13/suse-observability-agent-action@1.0.0-alpha
+        with:
+          stackstate_API_Key: ${{ secrets.stackstate_API_Key }}
+          stackstateClusterName: 'amolk-gh'
+          stackstate_URL: 'https://rancher-hosted.app.stackstate.io/receiver/stsAgent'
+          Namespace: 'suse-observability'
